@@ -1,0 +1,23 @@
+---
+title: "Lab 1"
+author: "Makesh Srinivasan"
+date: "1/11/2022"
+output: html_document
+---
+
+***
+Registration number: 19BCE1717<br>
+Faculty: Prof. Radha R<br>
+Slot: L37 + L38<br>
+Course code: CSE3505 <br>
+***
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 
+
+```{r}
+
+```
