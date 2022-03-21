@@ -1,0 +1,167 @@
+---
+title: "19BCE1717 Lab 8"
+author: "Makesh Srinivasan"
+date: "3/19/2022"
+output: html_document
+---
+
+Registration number: 19BCE1717<br>
+Faculty: Prof. Radha R<br>
+Slot: L37 + L38<br>
+Course code: CSE3505 <br>
+
+***
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rm(list=ls())
+```
+
+## Gradient Descent - Optimization
+
+***
+
+## Sections:
+* <a href="#part1">Question 1</a>
+* <a href="#part2">Question 2</a>
+
+***
+
+<strong id="part1">Question 1: </strong> Minimize the function <br>
+<center><strong>f(x) = 1.2 * (x-2)^2 + 3.2</strong></center>
+<br>
+
+Basic calculus requires that we find the 1st derivative, and solve for the value of x such that f'(x) = 0. <br>
+1) f'(x) = 2 * 1.2 * (x-2)  <br>
+2) step factor/learning rate = 0.05  <br>
+3) initial x value = 0.1 <br>
+ <br>
+Find the values of x that minimize the function above, and plots the progress of the algorithm with each iteration. <br>
+
+##### Create a sequence of elements in a Vector to generate sequences when plotting the axes of figures or simulating data. 
+```{r}
+xs <- seq(0,4,len=20) 
+xs
+```
+
+##### Define the function we want to optimize
+```{r}
+f <- function(x) {
+  1.2 * (x-2)^2 + 3.2
+}
+```
+
+##### Plot the function
+```{r}
+# plot the function 
+plot(xs , f (xs), type="l",xlab="x",ylab=expression(1.2(x-2)^2 +3.2)) 
+```
+
+##### Create a function for gradient df/dx
+
+f'(x) = df/dx = 2.4(x-2)
+```{r}
+grad <- function(x){
+  1.2*2*(x-2)
+}
+```
+
+df/dx = 2.4(x-2), if x = 2 then 2.4(2-2) = 0<br>
+The actual solution we will approximate with gradient descent is x = 2 as depicted in the plot below
+
+##### Gradient descent implementation
+```{r}
+x <- 0.1 # initialize the first guess for x-value
+xtrace <- x  # store x -values for graphing purposes (initial)
+ftrace <- f(x) # store y-values (function evaluated at x) for graphing purposes (initial)
+stepFactor <- 0.01 # learning rate 'alpha'
+for (step in 1:5000) {
+  x <- x - stepFactor*grad(x) # gradient descent update
+  xtrace <- c(xtrace,x) # update for graph
+  ftrace <- c(ftrace,f(x)) # update for graph
+}
+```
+
+##### Plot the gradient descent with the global minimum (optimised)
+```{r}
+plot(xs, f(xs), type="l", xlab="x", ylab=expression(1.2(x-2)^2 +3.2)) 
+lines(xtrace, ftrace, type="b", col="blue") # type=b (both points & lines)
+text(0.5,6, "Gradient Descent",col="red",pos= 4)
+print(x) # x converges to 2.0
+
+# now place the texts global minimum and x = 2
+text(2, 4, "x=2",col="red",pos=1)
+text(2, 4, "(Global minimum)",col="green", pos=3)
+```
+
+***
+
+<strong id="part2">Question 2: </strong> Minimize the function <br>
+<center><strong>f(x) = 3x^2 + 2x + 1</strong></center>
+<br>
+
+Basic calculus requires that we find the 1st derivative, and solve for the value of x such that f'(x) = 0. <br>
+1) f'(x) = 6x + 2 <br>
+2) step factor/learning rate = 0.01  <br>
+3) initial x value = 0.1 <br>
+ <br>
+Find the values of x that minimize the function above, and plots the progress of the algorithm with each iteration. <br>
+
+##### Create a sequence of elements in a Vector to generate sequences when plotting the axes of figures or simulating data. 
+```{r}
+xs <- seq(-2,2,len=20) 
+xs
+```
+
+##### Define the function we want to optimize
+```{r}
+f <- function(x) {
+  3*x*x + 2*x + 1
+}
+```
+
+##### Plot the function
+```{r}
+# plot the function 
+plot(xs , f (xs), type="l",xlab="x",ylab=expression(3*x*x + 2*x + 1)) 
+```
+
+##### Create a function for gradient df/dx
+
+f'(x) = df/dx = 6x + 2
+```{r}
+grad <- function(x){
+  6*x + 2
+}
+```
+
+df/dx = 6x + 2, if x = -1/3 then 6x + 2 = 0<br>
+The actual solution we will approximate with gradient descent is x = -1/3 as depicted in the plot below
+
+##### Gradient descent implementation
+```{r}
+x <- 0.1 # initialize the first guess for x-value
+xtrace <- x  # store x -values for graphing purposes (initial)
+ftrace <- f(x) # store y-values (function evaluated at x) for graphing purposes (initial)
+stepFactor <- 0.01 # learning rate 'alpha'
+for (step in 1:5000) {
+  x <- x - stepFactor*grad(x) # gradient descent update
+  xtrace <- c(xtrace,x) # update for graph
+  ftrace <- c(ftrace,f(x)) # update for graph
+}
+```
+
+##### Plot the gradient descent with the global minimum (optimised)
+```{r}
+plot(xs, f(xs), type="l", xlab="x", ylab=expression(3*x^2 + 2*x + 1)) 
+lines(xtrace, ftrace, type="b", col="blue") # type=b (both points & lines)
+text(-2,10, "Gradient Descent",col="red",pos= 4)
+print(x) # x converges to -1/3
+
+# now place the texts global minimum and x = -1/3
+text(-1/3, 4, "x=-1/3",col="red",pos=1)
+text(0, 4, "(Global minimum)",col="green", pos=3)
+```
+
+***
+

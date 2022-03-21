@@ -1,0 +1,151 @@
+---
+title: "Lab 7: K-Medoids clustering"
+author: "Makesh Srinivasan"
+date: "3/15/2022"
+output: html_document
+---
+
+Registration number: 19BCE1717<br>
+Faculty: Prof. Radha R<br>
+Slot: L37 + L38<br>
+Course code: CSE3505 <br>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## K-Medoids clustering
+
+***
+
+## Sections:
+* <a href="#part1">USArrests</a>
+* <a href="#part2">Autos</a>
+
+***
+<center><h3 id="part1">Part 1: USArrests</h3></center>
+<center><strong>K-Medoids clustering</strong>: USArrests</center><br>
+<br>
+Use the built-in dataset <strong>USArrests</strong> to perform clustering using K-Medoids
+<br>
+<br>
+
+##### Libraries:
+```{r}
+library(factoextra)
+library(cluster)
+```
+<br>
+
+##### Dataset
+```{r}
+df <- USArrests
+df<-na.omit(df)
+df<-scale(df) # Normalise the dataset
+head(df)
+```
+
+<br>
+
+##### Optimal number of clusters
+
+Plot number of clusters vs total within sum of squares
+```{r}
+fviz_nbclust(df,pam,method="wss")
+```
+<br>We notice that after scaling, we get a bend at k=4 so that is the optimal number of clusters
+
+<br>
+
+##### Clustering 
+
+Method: K-Medoids <br>
+k = 4 <br>
+```{r}
+set.seed(1) #to reproduce same results always
+km <- pam(df,k=4)
+km
+```
+
+Plot the results of the clustering:
+```{r}
+fviz_cluster(km, data=df)
+```
+
+<br>
+
+Add the clusters assigned to the dataset:
+```{r}
+final_data<-cbind(USArrests,cluster=km$cluster)
+```
+
+<br>
+
+##### Clustered dataset (final)
+
+```{r}
+head(final_data)
+```
+
+***
+<center><h3 id="part2">Part 2: Autos</h3></center>
+<center><strong>K-Medoids clustering</strong>: seeds_K Medoids.csv </center><br>
+<br>
+Use the dataset <strong>seeds_K Medoids.csv</strong> to perform clustering using K-Medoids
+<br>
+<br>
+
+##### Dataset
+```{r}
+df <- read.csv("autos.csv")
+df<-na.omit(df)
+df <- subset(df, select = c(length,price)) # Length and price are to be taken as per instructions given in the lab class
+df<-scale(df) # Normalise the dataset
+head(df)
+```
+
+<br>
+
+##### Optimal number of clusters
+
+Plot number of clusters vs total within sum of squares
+```{r}
+fviz_nbclust(df,pam,method="wss")
+```
+<br>Same as the above scenario, we notice that after scaling, we get a bend at k=4 so that is the optimal number of clusters
+
+<br>
+
+##### Clustering 
+
+Method: K-Medoids <br>
+k = 4 <br>
+```{r}
+set.seed(1) #to reproduce same results always
+km <- pam(df,k=4)
+km
+```
+
+Plot the results of the clustering:
+```{r}
+fviz_cluster(km, data=df)
+```
+
+<br>
+
+Add the clusters assigned to the dataset:
+```{r}
+final_data<-cbind(df,cluster=km$cluster)
+```
+
+<br>
+
+##### Clustered dataset (final)
+
+```{r}
+head(final_data)
+```
+
+***
+
+

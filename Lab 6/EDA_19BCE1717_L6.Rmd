@@ -1,0 +1,150 @@
+---
+title: "Lab 6: K-Means clustering"
+author: "Makesh Srinivasan"
+date: "3/8/2022"
+output: html_document
+---
+
+Registration number: 19BCE1717<br>
+Faculty: Prof. Radha R<br>
+Slot: L37 + L38<br>
+Course code: CSE3505 <br>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## K-Means clustering
+
+***
+
+## Sections:
+* <a href="#part1">USArrests</a>
+* <a href="#part2">Seeds K Means</a>
+
+***
+<center><h3 id="part1">Part 1: USArrests</h3></center>
+<center><strong>K-Means clustering</strong>: USArrests</center><br>
+<br>
+Use the built-in dataset <strong>USArrests</strong> to perform clustering using K-Means
+<br>
+<br>
+
+##### Libraries:
+```{r}
+library(factoextra)
+library(cluster)
+```
+<br>
+
+##### Dataset
+```{r}
+df <- USArrests
+df<-na.omit(df)
+df<-scale(df) # Normalise the dataset
+head(df)
+```
+
+<br>
+
+##### Optimal number of clusters
+
+Plot number of clusters vs total within sum of squares
+```{r}
+fviz_nbclust(df,kmeans,method="wss")
+```
+<br>We notice that after scaling, we get a bend at k=4 so that is the optimal number of clusters
+
+<br>
+
+##### Clustering 
+
+Method: K-Means <br>
+k = 4 <br>
+```{r}
+set.seed(1) #to reproduce same results always
+km <- kmeans(df, centers = 4, nstart = 25)
+km
+```
+
+Plot the results of the clustering:
+```{r}
+fviz_cluster(km, data=df)
+```
+
+<br>
+
+Add the clusters assigned to the dataset:
+```{r}
+final_data<-cbind(USArrests,cluster=km$cluster)
+```
+
+<br>
+
+##### Clustered dataset (final)
+
+```{r}
+head(final_data)
+```
+
+***
+<center><h3 id="part2">Part 2: Seeds</h3></center>
+<center><strong>K-Means clustering</strong>: seeds_K Means.csv </center><br>
+<br>
+Use the dataset <strong>seeds_K Means.csv</strong> to perform clustering using K-Means
+<br>
+<br>
+
+##### Dataset
+```{r}
+df <- read.csv("seeds_K Means.csv")
+df<-na.omit(df)
+df<-scale(df) # Normalise the dataset
+head(df)
+```
+
+<br>
+
+##### Optimal number of clusters
+
+Plot number of clusters vs total within sum of squares
+```{r}
+fviz_nbclust(df,kmeans,method="wss")
+```
+<br>Same as the above scenario, we notice that after scaling, we get a bend at k=4 so that is the optimal number of clusters
+
+<br>
+
+##### Clustering 
+
+Method: K-Means <br>
+k = 4 <br>
+```{r}
+set.seed(1) #to reproduce same results always
+km <- kmeans(df, centers = 4, nstart = 25)
+km
+```
+
+Plot the results of the clustering:
+```{r}
+fviz_cluster(km, data=df)
+```
+
+<br>
+
+Add the clusters assigned to the dataset:
+```{r}
+final_data<-cbind(df,cluster=km$cluster)
+```
+
+<br>
+
+##### Clustered dataset (final)
+
+```{r}
+head(final_data)
+```
+
+***
+
+

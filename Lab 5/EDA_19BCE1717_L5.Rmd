@@ -1,0 +1,123 @@
+---
+title: "Lab 5: Logistic regression"
+author: "Makesh Srinivasan"
+date: "3/1/2022"
+output: html_document
+---
+
+Registration number: 19BCE1717<br>
+Faculty: Prof. Radha R<br>
+Slot: L37 + L38<br>
+Course code: CSE3505 <br>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Logistic regression
+
+***
+
+<strong id="part1">Logistic regression</strong>: Admissions datset<br>
+<br>
+Use the dataset <strong>admission.csv</strong> to train a Logistic regression model
+<br>
+<br>
+
+##### Libraries:
+```{r}
+library(caret)
+library(ggplot2)
+```
+<br>
+
+##### Dataset
+```{r}
+rm(list=ls())
+mydata <- read.csv('admission.csv',header=T)
+```
+<br>
+
+##### Dataset exloration
+
+Structure:
+```{r}
+str(mydata)
+```
+
+Head:
+```{r}
+head(mydata)
+```
+
+Summary:
+```{r}
+summary(mydata)
+```
+
+Histogram plot:
+```{r}
+hist(mydata$admit,col='blue')
+```
+
+
+```{r}
+mydata$admit <- as.factor(mydata$admit)
+summary(mydata)
+```
+<br>
+
+##### Training 
+Loading the library and splitting 80-20 Training-Testing
+```{r}
+train_ind=createDataPartition(mydata$admit,p=0.80,list=F)
+train_ds=mydata[train_ind,]
+test_ds=mydata[-train_ind,]
+```
+
+Training the model:
+```{r}
+my_model=glm(admit~.,data=train_ds,family = "binomial")
+summary(my_model)
+```
+<br>
+
+##### Predictions
+Running predictions on test-set:
+```{r}
+pred_train=predict(my_model,train_ds,type="response")
+pred_train
+```
+<br>
+
+##### Performance analysis
+
+<strong>Train set</strong><br>
+Confusion matrix:
+```{r}
+pred_train=ifelse(pred_train>0.5,1,0)
+conf <- table(Predicted=pred_train,Actual=train_ds$admit)
+conf
+```
+
+Misclassification error:
+```{r}
+1-sum(diag(conf))/sum(conf)
+```
+
+<strong>Test set</strong><br>
+Confusion matrix:
+```{r}
+pred_test <- predict(my_model, test_ds, type = 'response')
+pred_test <- ifelse(pred_test>0.5, 1, 0)
+tab2 <- table(Predicted = pred_test, Actual = test_ds$admit)
+tab2
+```
+
+Misclassification error:
+```{r}
+1 - sum(diag(tab2))/sum(tab2)
+```
+
+***
+

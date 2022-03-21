@@ -1,23 +1,108 @@
 ---
-title: "Lab 1"
+title: "Lab 1: Linear regression"
 author: "Makesh Srinivasan"
 date: "1/11/2022"
 output: html_document
 ---
 
-***
 Registration number: 19BCE1717<br>
 Faculty: Prof. Radha R<br>
 Slot: L37 + L38<br>
 Course code: CSE3505 <br>
+
 ***
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 
+## Linear regression
 
+From the dataset given in class, generate a linear model and explore the same. Exercise question: Predict for when x = 1200 using the linear model
+
+##### 1) Create the dataset
+Declare and initialise the columns of the dataframe:
 ```{r}
-
+x <- c(200, 500, 700, 1000)
+y <- c(0.25, 0.5, 0.8, 1.5)
 ```
+
+Form the dataframe:
+```{r}
+data <- data.frame(x,y)
+# Uncomment the following line to view the data. While knitting, the View() function does not compile. Thus, I have used head() 
+# View(data)
+head(data) # Display the dataset
+```
+
+##### 2) Explore the data
+
+Structure of the data:
+```{r}
+str(data)
+```
+
+Attrbutes in the dataset:
+```{r}
+names(data)
+```
+
+Visualise the data
+```{r}
+plot(x,y)
+```
+
+##### 3) Linear regression model
+
+Create a linear model with hypothesis y = w0 + w1x:
+```{r}
+model_1 <- lm(y~x)
+model_1
+```
+
+Summary of the model:
+```{r}
+summary(model_1)
+```
+
+Construct linear line on the data points:
+```{r}
+plot(x,y)
+abline(model_1, col="blue")
+```
+
+##### 4) Testing the regressed model:
+<b>Approach 1:</b>
+```{r}
+test_x1 <- data.frame(x=6:8)
+R <- predict(model_1, test_x1)
+R #predicted values
+```
+
+Summary of test data:
+```{r}
+summary(R)
+```
+
+<b>Approach 2:</b>
+```{r}
+test_x2 <- data.frame(x=c(6,7,8))
+R1 <- predict(model_1, test_x2)
+R1
+```
+
+Summary of test data:
+```{r}
+summary(R1)
+```
+
+***
+##### 5) Exercise question
+1) Find y if x = 1200
+```{r}
+x <- data.frame(x = 1200)
+R2 <- predict(model_1, x)
+R2
+```
+
+***

@@ -1,0 +1,101 @@
+---
+title: "Lab 2: Time series forecasting 1 - Stationary"
+author: "Makesh Srinivasan"
+date: "1/25/2022"
+output: html_document
+---
+
+Registration number: 19BCE1717<br>
+Faculty: Prof. Radha R<br>
+Slot: L37 + L38<br>
+Course code: CSE3505 <br>
+
+***
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Time series forecasting 1 - stationary
+<strong> Dataset: </strong>Tractor-sales.csv
+<br>
+<br>
+
+
+##### Import necessary libraries
+```{r}
+rm(list=ls())
+library('forecast')
+library('tseries')
+```
+<br>
+
+##### Dataset
+```{r}
+data <- read.csv("Tractor-sales.csv")
+class(data) # this is now a dataframe
+```
+
+Convert the data to timeseries:
+```{r}
+data=ts(data$Number.of.Tractor.Sold,start=c(2003,1),frequency=12)
+class(data) # This is now a time series dataset
+```
+<br>
+
+##### Visualisations
+
+Visualise the timeseries data:
+```{r}
+plot(data,xlab='Years',ylab='Tractor sales')
+```
+
+Visualizing diff(data):
+```{r}
+plot(diff(data),ylab='Differenced Tractor Sales')
+```
+
+Visualizing log(data):
+```{r}
+ld <- log10(data)
+plot(ld,ylab='Log (Tractor sales)')
+```
+
+Visualizing diff(log(data)):
+```{r}
+dld <- diff(ld)
+plot(dld,ylab='Differenced Log (Tractor Sales)')
+```
+<br>
+
+##### Testing and plotting
+```{r}
+adf.test(dld)
+```
+
+ACF and PACF plots + fitting ARIMA model
+```{r}
+par(mfrow=c(1,2))
+acf(ts(dld),main="ACF Tractor sales")
+pacf(ts(dld),main="PACF Tractor sales")
+```
+
+```{r}
+ARIMAfit=auto.arima(dld,ic="aic",trace=TRUE)
+```
+
+```{r}
+summary(ARIMAfit)
+```
+
+Forecasting 3 time periods with the fitted model
+```{r}
+fc=forecast(ARIMAfit,level=c(95),h=3*12)
+plot(fc)
+```
+
+```{r}
+summary(fc)
+```
+
+***

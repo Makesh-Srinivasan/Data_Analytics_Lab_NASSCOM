@@ -1,0 +1,149 @@
+---
+title: "Lab 4: One-way ANOVA"
+author: "Makesh Srinivasan"
+date: "2/22/2022"
+output: html_document
+---
+
+Registration number: 19BCE1717<br>
+Faculty: Prof. Radha R<br>
+Slot: L37 + L38<br>
+Course code: CSE3505 <br>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## One-way ANOVA
+
+***
+
+## Sections:
+* <a href="#part1"><strong>Part 1: </strong>Machines dataset</a>
+* <a href="#part2"><strong>Part 2: </strong>Football dataset (lab exercise)</a>
+
+***
+<center><h3 id="part1">Part 1</h3></center>
+<center><strong>Machines dataset</strong><br></center>
+Use the dataset <strong>onewayanova_machine.csv</strong> to perform one-way ANOVA
+<br>
+<br>
+
+##### Libraries:
+```{r}
+library(ggplot2)
+```
+
+##### Dataset
+```{r}
+combined_groups <- read.csv("onewayanova_machine.csv")
+combined_groups
+```
+<br>
+Summary statistics:
+```{r}
+summary(combined_groups)
+```
+<br>
+Boxplot:
+```{r}
+boxplot(combined_groups,ylab="Diameter",xlab="Machines",col="orange")
+```
+
+Editing the dataframe to suitable structure:
+```{r}
+stacked_groups <- stack(combined_groups)
+stacked_groups
+```
+<br>
+Rename the attributes:
+```{r}
+names(stacked_groups) <- c("Diameter","Machines")
+stacked_groups
+```
+<br>
+
+##### Performing ANOVA and HSD test
+
+Performing one way anova:
+```{r}
+anova_results <- aov(Diameter~Machines,data=stacked_groups)
+summary(anova_results)
+```
+<br>
+Performing Tuckey HSD test on the ANOVA results:
+```{r}
+tk <- TukeyHSD(anova_results)
+tk
+```
+<br>
+
+##### Visualise
+
+Visualisation of the means of the Machines:
+```{r}
+plot(tk,col="blue")
+```
+
+***
+<center><h3 id="part2">Part 2</h3></center>
+<center><strong>Football dataset</strong></center>
+<br>
+Use the dataset <strong>One way Anova_Football.csv</strong> to perform one-way ANOVA
+<br>
+<br>
+
+##### Dataset
+```{r}
+combined_groups <- read.csv("One way Anova_Football.csv")
+combined_groups
+```
+
+<br>
+Summary statistics:
+```{r}
+summary(combined_groups)
+```
+<br>
+Boxplot:
+```{r}
+boxplot(combined_groups,ylab="Weight",xlab="Teams/clubs",col="#984447")
+```
+<br>
+Editing the dataframe to suitable structure:
+```{r}
+stacked_groups <- stack(combined_groups)
+stacked_groups
+```
+<br>
+Rename the attributes:
+```{r}
+names(stacked_groups) <- c("Weight","Clubs")
+stacked_groups
+```
+
+<br>
+
+##### Performing ANOVA and HSD test
+
+Performing one way anova:
+```{r}
+anova_results <- aov(Weight~Clubs,data=stacked_groups)
+summary(anova_results)
+```
+<br>
+Performing Tuckey HSD test on the ANOVA results:
+```{r}
+tk <- TukeyHSD(anova_results)
+tk
+```
+<br>
+
+##### Visualise
+
+Visualisation of the means of the Weights for clubs:
+```{r}
+plot(tk,col="blue")
+```
+
+***
