@@ -1,5 +1,5 @@
 ---
-title: "Lab 2: Time series forecasting 1 - Stationary"
+title: "Lab 2: Time series forecasting 1"
 author: "Makesh Srinivasan"
 date: "1/25/2022"
 output: html_document
@@ -16,7 +16,7 @@ Course code: CSE3505 <br>
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Time series forecasting 1 - stationary
+## Time series forecasting 1
 <strong> Dataset: </strong>Tractor-sales.csv
 <br>
 <br>

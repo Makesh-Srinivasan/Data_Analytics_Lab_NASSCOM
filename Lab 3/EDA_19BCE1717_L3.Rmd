@@ -1,5 +1,5 @@
 ---
-title: "Lab 3: Time series forecasting - 2 (Non stationary)"
+title: "Lab 3: Time series forecasting - 2"
 author: "Makesh Srinivasan"
 date: "1/25/2022"
 output: html_document
@@ -16,7 +16,7 @@ Course code: CSE3505 <br>
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Time series forecasting 2 - Non stationary
+## Time series forecasting 2
 <strong> Dataset: </strong>soya_oil data set for TS forecast.csv
 <br>
 <br>
@@ -38,7 +38,7 @@ class(data) # dataframe
 
 Convert the data to timeseries:
 ```{r}
-data=ts(data$Dollar,start=1,end=128,frequency=4)
+data=ts(data$Dollar,start=c(1990,1),frequency=4)
 class(data) # time series
 # View(data)
 ```
@@ -74,18 +74,18 @@ plot(dld,ylab='Differenced Log (Soya Oil Sales)')
 
 ##### Testing and plotting
 ```{r}
-adf.test(data)
+adf.test(dld)
 ```
 
 ACF and PACF plots + fitting ARIMA model
 ```{r}
 par(mfrow=c(1,2))
-acf(ts(data),main="ACF Soya Oil Sales")
-pacf(ts(data),main="PACF Soya Oil Sales")
+acf(ts(dld),main="ACF Soya Oil Sales")
+pacf(ts(dld),main="PACF Soya Oil Sales")
 ```
 
 ```{r}
-ARIMAfit=auto.arima(data,ic="aic",trace=TRUE)
+ARIMAfit=auto.arima(dld,ic="aic",trace=TRUE)
 ```
 
 ```{r}

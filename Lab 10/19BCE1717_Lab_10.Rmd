@@ -1,0 +1,139 @@
+---
+title: 'Lab 10: Random forest'
+author: "Makesh Srinivasan"
+date: "4/13/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Registration number: 19BCE1717<br>
+Faculty: Prof. Radha R<br>
+Slot: L37 + L38<br>
+Course code: CSE3505 <br>
+
+***
+
+
+## Random forest
+
+***
+
+## Sections:
+* <a href="#part1">Dataset 1 - Seeds</a>
+* <a href="#part2">Dataset 2 - Crabs</a>
+
+***
+
+<center><h3 id="part1">Seeds dataset</h3><br></center>
+<br>
+
+<br>
+
+##### Load necessary libraries:
+
+```{r}
+library('stats19')
+library('dplyr')
+library('randomForest')
+```
+<br>
+
+##### Load the dataset:
+
+```{r}
+mydata = read.csv("Seeds.csv")
+str(mydata)
+```
+<br>
+
+##### Split 70:30 train-test:
+
+```{r}
+mydata$seedType = as.factor(mydata$seedType)
+index=sample(2,nrow(mydata), replace=TRUE,prob=c(0.7,0.3))
+training=mydata[index==1,]
+testing=mydata[index==2,]
+```
+<br>
+
+##### Train the random forest model:
+
+```{r}
+RFM <- randomForest(seedType ~ .,data=training, importance=T, proximity=T)
+seed_pred = predict(RFM,testing)
+testing$seed_pred = seed_pred
+head(testing)
+```
+
+<br>
+
+##### Confusion matrix:
+```{r}
+CFM = table(testing$seedType,testing$seed_pred)
+CFM
+```
+
+
+<br>
+
+##### Accuracy:
+```{r}
+acc = sum(diag(CFM))/sum(CFM)*100
+acc
+```
+
+<br>
+<strong>INFERENCE: </strong>We see that the accuracy is 100 which means all data points are accurately classified. This was also observed in the previous code chunk - confusion matrix. There were no misclassification of see types. <br><br>
+
+Now let us see another dataset.
+
+***
+
+<center><h3 id="part2">Crabs dataset</h3><br></center>
+<br>
+
+
+##### Crabs dataset
+```{r}
+library(MASS)
+crabs <- crabs
+str(crabs)
+```
+
+<br>
+
+##### Random forest for species on crabs:
+
+```{r}
+index=sample(2,nrow(crabs), replace=TRUE,prob=c(0.5,0.5))
+training=crabs[index==1,]
+testing=crabs[index==2,]
+
+RFM <- randomForest(sp ~ .,data=training, importance=T, proximity=T)
+Species_Pred = predict(RFM, testing)
+testing$Species_Pred=Species_Pred
+```
+
+<br>
+
+##### Performance measure:
+
+```{r}
+# confusion matrix
+CFM = table(testing$sp,testing$Species_Pred)
+CFM
+
+# accuracy
+acc = sum(diag(CFM))/sum(CFM)*100
+acc
+```
+
+<br>
+<strong>INFERENCE: </strong>We see that the accuracy is 89.19 which means most of the data points are accurately classified. This was also observed in the confusion matrix. Only 12 misclassifications occurred - 10 Blue were incorrectly predicted as Orange while 2 Orange were incorrectly predicted as Blue.
+
+***
+
+

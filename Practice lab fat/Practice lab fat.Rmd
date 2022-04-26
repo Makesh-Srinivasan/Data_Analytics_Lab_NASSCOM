@@ -1,0 +1,82 @@
+---
+title: "Lab practice"
+author: "Makesh Srinivasan"
+date: "4/26/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+data <- read.csv("Seeds.csv")
+model_1 = lm(seedType ~ ., data=data)
+textx1 = data.frame(ID = 1,area= 15.26, perimeter=14.84, compactness=0.8710,lengthOfKernel=	5.763, widthOfKernel=3.312, asymmetryCoefficient =2.221, lengthOfKernelGroove=5.22)
+preds = predict(model_1, textx1)
+```
+
+
+
+
+```{r}
+library('tseries')
+library('forecast')
+data=read.csv("Tractor-sales.csv")
+data=ts(data$Number.of.Tractor.Sold,start=c(2003,1),frequency=12)
+adf.test(data)
+par(mfrow=c(1,2))
+acf(ts(diff(log10(data))))
+pacf(ts(diff(log10(data))))
+ARIMAfit = auto.arima(diff(log10(data)),ic="aic",trace=TRUE)
+summary(ARIMAfit)
+fc=forecast(ARIMAfit,level=c(95),h=3*12)
+plot(fc)
+summary(fc)
+attributes(fc)
+```
+
+
+```{r}
+data<- read.csv("onewayanova_machine.csv")
+boxplot(data, xlab="Machines", ylab="Diameter", col="black")
+sg <- stack(data)
+names(sg) <- c("Diameter", "Machines")
+anovares <- aov(data = sg, Diameter~Machines)
+tk=TukeyHSD(anovares)
+plot(tk,col="blue")
+```
+
+
+```{r}
+library(caret)
+data <- read.csv('admission.csv')
+data$admit <- as.factor(data$admit)
+trainind = createDataPartition(data$admit,p=0.80,list=F)
+train = data[trainind, ]
+test = data[-trainind, ]
+model_lr = glm(admit~., data=train, family = "binomial")
+preds = predict(model_lr, test, type="response")
+trainpreds = predict(model_lr, train, type="response")
+trainpreds = ifelse(trainpreds>0.5, 1, 0)
+conf <- table(Predicted=trainpreds, actual = train$admit)
+sum(diag(conf))/sum(conf)
+```
+
+
+```{r}
+data <- read.csv("Tractor-sales.csv")
+data <- ts(data$Number.of.Tractor.Sold, start=c(2003,01), frequency = 12)
+adf.test(data)
+pacf(ts(diff(log10(data))))
+acf(ts(diff(log10(data))))
+arimafit = auto.arima(diff(log10(data)), ic="aic", trace=TRUE)
+fc = forecast(arimafit, level=c(95), h=3*12)
+plot(fc)
+```
+
+```{r}
+
+```
+
