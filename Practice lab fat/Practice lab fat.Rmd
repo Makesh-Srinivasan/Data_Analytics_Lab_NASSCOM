@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
+regression
 ```{r}
 data <- read.csv("Seeds.csv")
 model_1 = lm(seedType ~ ., data=data)
@@ -19,7 +19,7 @@ preds = predict(model_1, textx1)
 
 
 
-
+time series. if less than 0.05 then reject null and accept alternate
 ```{r}
 library('tseries')
 library('forecast')
@@ -37,7 +37,7 @@ summary(fc)
 attributes(fc)
 ```
 
-
+anova
 ```{r}
 data<- read.csv("onewayanova_machine.csv")
 boxplot(data, xlab="Machines", ylab="Diameter", col="black")
@@ -48,7 +48,7 @@ tk=TukeyHSD(anovares)
 plot(tk,col="blue")
 ```
 
-
+logistic regression
 ```{r}
 library(caret)
 data <- read.csv('admission.csv')
@@ -65,18 +65,117 @@ sum(diag(conf))/sum(conf)
 ```
 
 
+K means
 ```{r}
-data <- read.csv("Tractor-sales.csv")
-data <- ts(data$Number.of.Tractor.Sold, start=c(2003,01), frequency = 12)
-adf.test(data)
-pacf(ts(diff(log10(data))))
-acf(ts(diff(log10(data))))
-arimafit = auto.arima(diff(log10(data)), ic="aic", trace=TRUE)
-fc = forecast(arimafit, level=c(95), h=3*12)
-plot(fc)
+library(factoextra)
+library(cluster)
+df <- USArrests
+df<-na.omit(df)
+df<-scale(df) # Normalise the dataset
+head(df)
+fviz_nbclust(df,kmeans,method="wss")
+set.seed(1) #to reproduce same results always
+km <- kmeans(df, centers = 4, nstart = 25)
+fviz_cluster(km, data=df)
+final_data<-cbind(USArrests,cluster=km$cluster)
+head(final_data)
+```
+ 
+K medoids 
+```{r}
+df <- USArrests
+df<-na.omit(df)
+df<-scale(df) 
+head(df)
+fviz_nbclust(df,pam,method="wss") #pam
+set.seed(1) 
+km <- pam(df,k=4) # data and k values
+fviz_cluster(km, data=df)
+final_data<-cbind(USArrests,cluster=km$cluster)
+head(final_data)
+```
+
+gradient descent
+```{r}
+xs <- seq(0,4,len=20) 
+f <- function(x) {
+  1.2 * (x-2)^2 + 3.2
+}
+plot(xs , f (xs), type="l",xlab="x",ylab=expression(1.2(x-2)^2 +3.2)) 
+grad <- function(x){
+  1.2*2*(x-2)
+}
+x <- 0.1 # initialize the first guess for x-value
+xtrace <- x  # store x -values for graphing purposes (initial)
+ftrace <- f(x) # store y-values (function evaluated at x) for graphing purposes (initial)
+stepFactor <- 0.01 # learning rate 'alpha'
+for (step in 1:5000) {
+  x <- x - stepFactor*grad(x) # gradient descent update
+  xtrace <- c(xtrace,x) # update for graph
+  ftrace <- c(ftrace,f(x)) # update for graph
+}
+plot(xs, f(xs), type="l", xlab="x", ylab=expression(1.2(x-2)^2 +3.2)) 
+lines(xtrace, ftrace, type="b", col="blue") # type=b (both points & lines)
+text(0.5,6, "Gradient Descent",col="red",pos= 4)
+print(x) # x converges to 2.0
+text(2, 4, "x=2",col="red",pos=1)
+text(2, 4, "(Global minimum)",col="green", pos=3)
+```
+
+Hierarchical clustering
+```{r}
+df <- USArrests  
+df <- na.omit(df)
+df <- scale(df) # scaling to normalize the values >>>> x-xbar/SD
+dist_mat <- dist(df, method = 'euclidean')
+hclust_complete <- hclust(dist_mat, method = 'complete') # function call for Hier. Clust.
+plot(hclust_complete, cex = 0.5, hang = -1)
+# hang = A negative value will cause the labels to hang down from 0.
+# cex= font size
+cut<- cutree(hclust_complete, k = 4)
+abline(h = 4, col = 'red')
+rect.hclust(hclust_complete, k = 4, border = 2:5)
+```
+
+Random forest
+```{r}
+library('randomForest')
+library('stats19')
+library('dplyr')
+mydata = read.csv("Seeds.csv")
+mydata$seedType = as.factor(mydata$seedType)
+index=sample(2,nrow(mydata), replace=TRUE,prob=c(0.7,0.3))
+training=mydata[index==1,]
+testing=mydata[index==2,]
+RFM <- randomForest(seedType ~ .,data=training, importance=T, proximity=T)
+seed_pred = predict(RFM,testing)
+testing$seed_pred = seed_pred
+head(testing)
+CFM = table(testing$seedType,testing$seed_pred)
+acc = sum(diag(CFM))/sum(CFM)*100
+acc
 ```
 
 ```{r}
 
 ```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
 
